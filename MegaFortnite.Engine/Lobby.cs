@@ -122,12 +122,21 @@ namespace MegaFortnite.Engine
             }
             else if (PlayersStats.Values.Count(q => q.Health <= 0) > 1)
             {
-                var lastHitPlayers = PlayersStats.Values.Where(q => q.Health <= 0);
+                //ToDo переделать 
+                while (PlayersStats.Values.Count(q => q.Health <= 0) > 1)
+                {
+                    var lastHitPlayers = PlayersStats.Values.Where(q => q.Health <= 0);
+                    foreach (var lastHitPlayer in lastHitPlayers)
+                    {
+                        lastHitPlayer.Heal(lastHitPlayer.PrevHealth - lastHitPlayer.Health);
+                        lastHitPlayer.Damage(_generator.Next(0, DamageRange));
+                    }
+                }
             }
-
 
             RaiseTickEvent();
         }
+
 
         private void StopLobby()
         {
