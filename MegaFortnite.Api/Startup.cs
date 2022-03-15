@@ -42,7 +42,6 @@ namespace MegaFortnite.Api
                     // base-address of your identityserver
                     options.Authority = "http://localhost:5666";
                     options.LegacyAudienceValidation = true;
-
                     // name of the API resource
                     options.ApiName = "test.api";
                     options.ApiSecret = "secret";
