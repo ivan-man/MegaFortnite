@@ -20,4 +20,8 @@
 	  <ProjectReference Include="..\MegaFortnite.Domain\MegaFortnite.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Migrations" />
+	</ItemGroup>
+
 </Project>

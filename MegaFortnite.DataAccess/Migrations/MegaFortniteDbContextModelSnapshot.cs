@@ -21,70 +21,6 @@ namespace MegaFortnite.DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("MegaFortnite.Domain.Models.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email");
-
-                    b.HasIndex("Phone");
-
-                    b.ToTable("Customers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Created = new DateTime(2022, 3, 8, 21, 17, 3, 971, DateTimeKind.Utc).AddTicks(9179),
-                            Email = "test1@test.com",
-                            FirstName = "Customer_1",
-                            Phone = ""
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Created = new DateTime(2022, 3, 8, 21, 17, 3, 971, DateTimeKind.Utc).AddTicks(9503),
-                            Email = "test2@test.com",
-                            FirstName = "Customer_2",
-                            Phone = ""
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Created = new DateTime(2022, 3, 8, 21, 17, 3, 971, DateTimeKind.Utc).AddTicks(9506),
-                            Email = "test3@test.com",
-                            FirstName = "Customer_3",
-                            Phone = ""
-                        });
-                });
-
             modelBuilder.Entity("MegaFortnite.Domain.Models.Profile", b =>
                 {
                     b.Property<int>("Id")
@@ -95,8 +31,8 @@ namespace MegaFortnite.DataAccess.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("NickName")
                         .HasMaxLength(128)
@@ -113,7 +49,8 @@ namespace MegaFortnite.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
 
                     b.ToTable("Profiles");
 
@@ -121,8 +58,8 @@ namespace MegaFortnite.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2022, 3, 8, 21, 17, 3, 972, DateTimeKind.Utc).AddTicks(9393),
-                            CustomerId = 1,
+                            Created = new DateTime(2022, 3, 15, 23, 53, 13, 422, DateTimeKind.Utc).AddTicks(8973),
+                            CustomerId = new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bff"),
                             NickName = "xXx_predator_xXx",
                             Rate = 0,
                             WinRate = 0m
@@ -130,8 +67,8 @@ namespace MegaFortnite.DataAccess.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2022, 3, 8, 21, 17, 3, 972, DateTimeKind.Utc).AddTicks(9399),
-                            CustomerId = 1,
+                            Created = new DateTime(2022, 3, 15, 23, 53, 13, 422, DateTimeKind.Utc).AddTicks(9179),
+                            CustomerId = new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfa"),
                             NickName = "HArU6ATOP",
                             Rate = 0,
                             WinRate = 0m
@@ -139,8 +76,8 @@ namespace MegaFortnite.DataAccess.Migrations
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2022, 3, 8, 21, 17, 3, 972, DateTimeKind.Utc).AddTicks(9400),
-                            CustomerId = 1,
+                            Created = new DateTime(2022, 3, 15, 23, 53, 13, 422, DateTimeKind.Utc).AddTicks(9182),
+                            CustomerId = new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfb"),
                             NickName = "4TO_C_E6AJIOM",
                             Rate = 0,
                             WinRate = 0m
@@ -205,17 +142,6 @@ namespace MegaFortnite.DataAccess.Migrations
                     b.ToTable("Results");
                 });
 
-            modelBuilder.Entity("MegaFortnite.Domain.Models.Profile", b =>
-                {
-                    b.HasOne("MegaFortnite.Domain.Models.Customer", "Customer")
-                        .WithMany("Profiles")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
             modelBuilder.Entity("MegaFortnite.Domain.Models.Session", b =>
                 {
                     b.HasOne("MegaFortnite.Domain.Models.Profile", "Owner")
@@ -244,11 +170,6 @@ namespace MegaFortnite.DataAccess.Migrations
                     b.Navigation("GameProfile");
 
                     b.Navigation("Session");
-                });
-
-            modelBuilder.Entity("MegaFortnite.Domain.Models.Customer", b =>
-                {
-                    b.Navigation("Profiles");
                 });
 
             modelBuilder.Entity("MegaFortnite.Domain.Models.Profile", b =>

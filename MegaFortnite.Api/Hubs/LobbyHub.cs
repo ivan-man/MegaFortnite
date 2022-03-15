@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MegaFortnite.Api.Hubs
 {
+    [Authorize]
     public class LobbyHub : Hub
     {
         private readonly IMediator _mediator;
@@ -55,7 +56,6 @@ namespace MegaFortnite.Api.Hubs
             await Clients.Client(Context.ConnectionId).SendAsync("LogMessage", $"{Context.ConnectionId} connected");
         }
 
-        [Authorize]
         public async Task CreateLobby(int ownerId)
         {
             var lobbyType = SessionType.Duel;
