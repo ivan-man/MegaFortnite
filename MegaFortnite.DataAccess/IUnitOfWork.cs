@@ -11,7 +11,6 @@ namespace MegaFortnite.DataAccess
     public interface IUnitOfWork
     {
         MegaFortniteDbContext DbContext { get; }
-        ICustomerRepository Customers { get; }
         IProfileRepository Profiles { get; }
         ISessionRepository Sessions { get; }
         ISessionResultRepository Results { get; }

@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaFortnite.Contracts", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaFortnite.Api", "MegaFortnite.Api\MegaFortnite.Api.csproj", "{FF504A64-61AD-4D1A-9964-C1D7F4ADA6F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MegaFortnite.Play.Api", "MegaFortnite.Play.Api\MegaFortnite.Play.Api.csproj", "{E33F7A2D-2A78-4E8F-99A7-3F799F8AD9FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MegaFortnite.JsClient", "MegaFortnite.JsClient\MegaFortnite.JsClient.csproj", "{E33F7A2D-2A78-4E8F-99A7-3F799F8AD9FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "Infrastructure\IdentityService\IdentityService.csproj", "{763B9AE1-492D-4F0B-BF84-D5583FC901AC}"
 EndProject

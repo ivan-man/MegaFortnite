@@ -13,7 +13,6 @@ namespace MegaFortnite.DataAccess
 {
     public sealed class MegaFortniteDbContext : DbContext
     {
-        public DbSet<Customer> Customers { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<SessionResult> Results { get; set; }
@@ -28,23 +27,11 @@ namespace MegaFortnite.DataAccess
             modelBuilder.HasPostgresExtension("uuid-ossp");
             modelBuilder.HasDefaultSchema("public");
 
-
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Customer>()
-                .HasMany(x => x.Profiles);
-
-            modelBuilder.Entity<Customer>()
-                .HasIndex(x => x.Email);
-
-            modelBuilder.Entity<Customer>()
-                .HasIndex(x => x.Phone);
-
             modelBuilder.Entity<Profile>()
-                .HasOne(x => x.Customer);
-
-            modelBuilder.Entity<Profile>()
-                .HasIndex(x => x.CustomerId);
+                .HasIndex(x => x.CustomerId)
+                .IsUnique();
 
             modelBuilder.Entity<Session>()
                 .HasMany(x => x.Results);

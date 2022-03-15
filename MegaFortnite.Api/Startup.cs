@@ -40,8 +40,9 @@ namespace MegaFortnite.Api
                 .AddIdentityServerAuthentication(options =>
                 {
                     // base-address of your identityserver
-                    options.Authority = "http://localhost:5666";
+                    options.Authority = "https://localhost:5001";
                     options.LegacyAudienceValidation = true;
+
                     // name of the API resource
                     options.ApiName = "test.api";
                     options.ApiSecret = "secret";
@@ -56,8 +57,6 @@ namespace MegaFortnite.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseDefaultFiles();
-            app.UseStaticFiles();
-            app.UseCors("default");
 
             app.Migrate();
 

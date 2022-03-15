@@ -8,12 +8,12 @@ using MegaFortnite.Business.CreateLobby;
 using MegaFortnite.Business.Join;
 using MegaFortnite.Common.Enums;
 using MegaFortnite.Engine;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace MegaFortnite.Api.Hubs
 {
-    //ToDO говнокод 
     public class LobbyHub : Hub
     {
         private readonly IMediator _mediator;
@@ -55,6 +55,7 @@ namespace MegaFortnite.Api.Hubs
             await Clients.Client(Context.ConnectionId).SendAsync("LogMessage", $"{Context.ConnectionId} connected");
         }
 
+        [Authorize]
         public async Task CreateLobby(int ownerId)
         {
             var lobbyType = SessionType.Duel;

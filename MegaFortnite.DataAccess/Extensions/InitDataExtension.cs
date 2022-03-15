@@ -13,27 +13,15 @@ namespace MegaFortnite.DataAccess.Extensions
         public static ModelBuilder InitData(this ModelBuilder modelBuilder)
         {
             return modelBuilder
-                .InitCustomers()
                 .InitProfiles();
-        }
-
-        private static ModelBuilder InitCustomers(this ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Customer>().HasData(
-                new Customer { Id = 1, Phone = "", Email = "test1@test.com", FirstName = "Customer_1", Created = DateTime.UtcNow },
-                new Customer { Id = 2, Phone = "", Email = "test2@test.com", FirstName = "Customer_2", Created = DateTime.UtcNow },
-                new Customer { Id = 3, Phone = "", Email = "test3@test.com", FirstName = "Customer_3", Created = DateTime.UtcNow }
-                );
-
-            return modelBuilder;
         }
 
         private static ModelBuilder InitProfiles(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Profile>().HasData(
-                new Profile { Id = 1, NickName = "xXx_predator_xXx", CustomerId = 1, Created = DateTime.UtcNow },
-                new Profile { Id = 2, NickName = "HArU6ATOP", CustomerId = 1, Created = DateTime.UtcNow },
-                new Profile { Id = 3, NickName = "4TO_C_E6AJIOM", CustomerId = 1, Created = DateTime.UtcNow }
+                new Profile { Id = 1, NickName = "xXx_predator_xXx", CustomerId = Guid.Parse("a6b3ee91-1be7-4eab-a15b-7bffc8b94bff"), Created = DateTime.UtcNow },
+                new Profile { Id = 2, NickName = "HArU6ATOP", CustomerId = Guid.Parse("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfa"), Created = DateTime.UtcNow },
+                new Profile { Id = 3, NickName = "4TO_C_E6AJIOM", CustomerId = Guid.Parse("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfb"), Created = DateTime.UtcNow }
                 );
 
             return modelBuilder;
