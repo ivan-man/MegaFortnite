@@ -59,30 +59,36 @@ namespace IdentityService
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     // scopes that client has access to
-                    AllowedScopes = { "api1" }
-                },
 
-                // interactive ASP.NET Core MVC client
-                new Client
-                {
-                    ClientId = "mvc",
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-
-                    AllowedGrantTypes = GrantTypes.Code,
-
-                    // where to redirect to after login
-                    RedirectUris = { "https://localhost:5002/signin-oidc" },
-
-                    // where to redirect to after logout
-                    PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
-
-                    AllowedScopes = new List<string>
+                    AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "api1",
                     }
                 },
+
+                // interactive ASP.NET Core MVC client
+                // new Client
+                // {
+                //     ClientId = "mvc",
+                //     ClientSecrets = { new Secret("secret".Sha256()) },
+                //
+                //     AllowedGrantTypes = GrantTypes.Code,
+                //
+                //     // where to redirect to after login
+                //     RedirectUris = { "https://localhost:5002/signin-oidc" },
+                //
+                //     // where to redirect to after logout
+                //     PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                //
+                //     AllowedScopes = new List<string>
+                //     {
+                //         IdentityServerConstants.StandardScopes.OpenId,
+                //         IdentityServerConstants.StandardScopes.Profile,
+                //         "api1"
+                //     }
+                // },
 
                 // JavaScript Client
                 new Client
@@ -92,15 +98,28 @@ namespace IdentityService
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireClientSecret = false,
 
-                    RedirectUris = { "https://localhost:5003/callback.html" },
-                    PostLogoutRedirectUris = { "https://localhost:5003/index.html" },
-                    AllowedCorsOrigins = { "https://localhost:5003" },
-
+                    RedirectUris =
+                    {
+                        "https://localhost:5003/callback.html",
+                        "https://localhost:5123/callback.html",
+                    },
+                    PostLogoutRedirectUris =
+                    {
+                        "https://localhost:5003/index.html",
+                        "https://localhost:5123/lobby.html",
+                        "https://localhost:5123/index.html",
+                    },
+                    AllowedCorsOrigins =
+                    {
+                        "https://localhost:5003",
+                        "https://localhost:5123"
+                    },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "x_scope",
+                        "api1",
                     }
                 }
             };
@@ -110,7 +129,7 @@ namespace IdentityService
 
         public IEnumerable<ApiScope> GetApiScopes() => new List<ApiScope>
         {
-            new ApiScope("api1", "My API")
+            new ApiScope("api1", "My API"),
         };
 
         public IEnumerable<ApiResource> GetIdentityApiResources() =>

@@ -1,4 +1,5 @@
-﻿
+﻿"use strict";
+
 document.getElementById("login").addEventListener("click", login, false);
 
 function log() {
@@ -15,16 +16,16 @@ function log() {
     });
 }
 
-var config = {
-    authority: "http://localhost:5666",
+let config = {
+    authority: "https://localhost:5001",
     client_id: "js",
-    redirect_uri: "http://localhost:5123/callback.html",
+    redirect_uri: "https://localhost:5123/callback.html",
     response_type: "code",
-    post_logout_redirect_uri: "http://localhost:5123/index.html",
+    post_logout_redirect_uri: "https://localhost:5123/index.html",
     scope: "x_scope"
 };
 
-var mgr = new Oidc.UserManager(config);
+let mgr = new Oidc.UserManager(config);
 
 mgr.getUser().then(function (user) {
     if (user) {

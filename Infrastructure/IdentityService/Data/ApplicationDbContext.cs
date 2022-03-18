@@ -1,5 +1,4 @@
-﻿using IdentityService.Data.Extensions;
-using IdentityService.Model;
+﻿using IdentityService.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,11 +11,9 @@ namespace IdentityService.Data
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.InitData();
-
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);

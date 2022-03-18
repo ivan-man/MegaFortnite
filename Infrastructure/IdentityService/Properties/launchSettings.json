@@ -9,9 +9,10 @@
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "IdentityService": {
+    "SelfHost": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

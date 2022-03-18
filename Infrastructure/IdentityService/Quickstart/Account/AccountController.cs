@@ -32,8 +32,7 @@ namespace IdentityServerHost.Quickstart.UI
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly TestUserStore _users;
-        //ToDo change to uow
+        //ToDo change to uow/Repository
         private readonly ApplicationDbContext _context;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
@@ -52,7 +51,6 @@ namespace IdentityServerHost.Quickstart.UI
         {
             // if the TestUserStore is not in DI, then we'll just use the global users collection
             // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-            _users = users ?? new TestUserStore(TestUsers.Users);
             _pwdHasher = new PasswordHasher<ApplicationUser>();
 
             _context = context;

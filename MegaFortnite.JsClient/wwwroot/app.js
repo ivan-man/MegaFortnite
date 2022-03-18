@@ -51,23 +51,23 @@ var options = {
 
 function api() {
     mgr.getUser().then(function (user) {
-        // var url = "https://localhost:6001/identity";
-        var url = "https://localhost:5123/lobbyHub";
+        // var url = "https://localhost:5123/lobbyHub";
+        // let connection = new signalR.HubConnectionBuilder()
+        //     .withUrl(`https://localhost:5123/lobbyHub?token=${user.access_token}`)
+        //     .configureLogging(signalR.LogLevel.Information)
+        //     .build();
+        //
+        // connection.start().catch(err => console.error(err.toString()));
 
-        // var xhr = new XMLHttpRequest();
-        // xhr.open("GET", url);
-        // xhr.onload = function () {
-        //     log(xhr.status, JSON.parse(xhr.responseText));
-        // }
-        // xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
-        // xhr.send();
+        var url = "https://localhost:6001/identity";
 
-        let connection = new signalR.HubConnectionBuilder()
-            .withUrl(`https://localhost:5123/lobbyHub?token=${user.access_token}`)
-            .configureLogging(signalR.LogLevel.Information)
-            .build();
-
-        connection.start().catch(err => console.error(err.toString()));
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.onload = function () {
+            log(xhr.status, JSON.parse(xhr.responseText));
+        }
+        xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
+        xhr.send();
     });
 }
 

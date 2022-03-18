@@ -35,6 +35,7 @@ namespace MegaFortnite.Api.Hubs
         {
             var connectionId = Context.ConnectionId;
 
+            var userId = Context.User?.Claims;
             //if (!int.TryParse(paramId, out var id))
             //{
             //    _logger.LogWarning("Invalid user id on connection {Id}", paramId);
