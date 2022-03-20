@@ -16,8 +16,8 @@ namespace MegaFortnite.Business.GetProfile
 {
     public class GetProfileCommandHandler : IRequestHandler<GetProfileCommand, Result<PlayerProfileDto>>
     {
-        private IUnitOfWork _unitOfWork;
-        private ILogger<GetProfileCommandHandler> _logger;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<GetProfileCommandHandler> _logger;
 
         public GetProfileCommandHandler(IUnitOfWork unitOfWork, ILogger<GetProfileCommandHandler> logger)
         {
@@ -25,14 +25,23 @@ namespace MegaFortnite.Business.GetProfile
             _logger = logger;
         }
 
-        public async Task<Result<PlayerProfileDto>> Handle(GetProfileCommand request, CancellationToken cancellationToken)
+        public async Task<Result<PlayerProfileDto>> Handle(GetProfileCommand request,
+            CancellationToken cancellationToken)
         {
-            var profile = await _unitOfWork.Profiles.GetAsync(q => q.CustomerId == request.CustomerId);
+            try
+            {
+                var profile = await _unitOfWork.Profiles.GetAsync(q => q.CustomerId == request.CustomerId);
 
-            if (profile == null)
-                return Result<PlayerProfileDto>.NotFound($"Profile with Id = '{request.CustomerId}' not found");
+                if (profile == null)
+                    return Result<PlayerProfileDto>.NotFound($"Profile with Id = '{request.CustomerId}' not found");
 
-            return Result<PlayerProfileDto>.Ok(profile.Adapt<PlayerProfileDto>());
+                return Result<PlayerProfileDto>.Ok(profile.Adapt<PlayerProfileDto>());
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed to get profile {@Request}", request);
+                return Result<PlayerProfileDto>.Internal();
+            }
         }
     }
 }

@@ -11,9 +11,9 @@ namespace MegaFortnite.Business.CreateLobby
     {
         public CreateLobbyCommandValidator()
         {
-            RuleFor(x => x.OwnerId)
-                .GreaterThan(0)
-                .WithMessage($"Invalid {nameof(CreateLobbyCommand.OwnerId)}");
+            RuleFor(x => x.CustomerId)
+                .NotEmpty()
+                .WithMessage($"Invalid {nameof(CreateLobbyCommand.CustomerId)}");
 
             RuleFor(x => x.ConnectionId)
                 .NotEmpty()

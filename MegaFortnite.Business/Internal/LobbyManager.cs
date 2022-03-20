@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -9,6 +10,7 @@ using MegaFortnite.Common.Result;
 using MegaFortnite.DataAccess;
 using MegaFortnite.Domain.Models;
 using MegaFortnite.Engine;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace MegaFortnite.Business.Internal
@@ -17,10 +19,12 @@ namespace MegaFortnite.Business.Internal
     {
         private readonly ILogger<LobbyManager> _logger;
         private readonly IMediator _mediator;
+
+        private readonly MemoryCache _memoryCache = new(new MemoryCacheOptions());
         //private readonly IUnitOfWork _unitOfWork;
 
         private readonly ConcurrentDictionary<string, Lobby> _actualLobbies = new();
-        private readonly ConcurrentDictionary<int, string> _owners = new();
+        private readonly ConcurrentDictionary<Guid, Lobby> _owners = new();
 
         public LobbyManager(IMediator mediator, ILogger<LobbyManager> logger)
         {
@@ -33,13 +37,13 @@ namespace MegaFortnite.Business.Internal
             return _actualLobbies.TryGetValue(key, out var lobby) ? Result<Lobby>.Ok(lobby) : Result<Lobby>.NotFound();
         }
 
-        public Result<Lobby> CreateLobby(int ownerId, SessionType sessionType)
+        public Result<Lobby> CreateLobby(Guid customerId, SessionType sessionType)
         {
-            if (ownerId <= 0)
+            if (customerId == default)
                 return Result<Lobby>.Bad("Invalid UserId");
 
-            if (_owners.ContainsKey(ownerId))
-                return Result<Lobby>.Bad("User already created lobby");
+            if (_owners.ContainsKey(customerId))
+                return Result<Lobby>.Ok(_owners[customerId]);
 
             string key;
             do
@@ -47,14 +51,15 @@ namespace MegaFortnite.Business.Internal
                 key = LobbyKeyGenerator.GenerateKey(5);
             } while (_actualLobbies.ContainsKey(key));
 
-            if (!_owners.TryAdd(ownerId, key))
+            var lobby = new Lobby(customerId, sessionType, key, Remove);
+
+            if (!_owners.TryAdd(customerId, lobby))
             {
                 _logger.LogWarning("Failed to add key into pool. {OwnerId} {SessionType} {Key}",
-                    ownerId, sessionType, key);
+                    customerId, sessionType, key);
                 return Result<Lobby>.Internal();
             }
 
-            var lobby = new Lobby(ownerId, sessionType, key, Remove);
 
             lobby.FinishedEvent += LobbyOnFinishedEvent;
 
@@ -62,9 +67,33 @@ namespace MegaFortnite.Business.Internal
                 return Result<Lobby>.Ok(lobby);
 
             _logger.LogWarning("Failed to add lobby into pool. {OwnerId} {SessionType} {Key}",
-                ownerId, sessionType, key);
+                customerId, sessionType, key);
 
             return Result<Lobby>.Internal();
+        }
+
+        public Result SetOrUpdateConnectionId(Guid customerId, string connectionId)
+        {
+            var cacheExpiryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddSeconds(600),
+                Priority = CacheItemPriority.High,
+                SlidingExpiration = TimeSpan.FromSeconds(300)
+            };
+
+            _memoryCache.Set(customerId, connectionId, cacheExpiryOptions);
+
+            return Result.Ok();
+        }
+
+        public Result<string> GetConnectionId(Guid customerId)
+        {
+            if (!_memoryCache.TryGetValue(customerId, out string connectionId))
+            {
+                return Result<string>.NotFound();
+            }
+
+            return Result<string>.Ok(connectionId);
         }
 
         //Говнокод
@@ -114,23 +143,23 @@ namespace MegaFortnite.Business.Internal
             //});
         }
 
-        public Result Remove(int ownerId)
+        public Result Remove(Guid ownerId)
         {
-            if (ownerId <= 0)
+            if (ownerId == default)
                 return Result<Lobby>.Bad("Invalid UserId");
 
             if (!_owners.ContainsKey(ownerId))
                 return Result<Lobby>.Bad("User already created lobby");
 
-            if (!_owners.TryRemove(ownerId, out var lobbyKey))
+            if (!_owners.TryRemove(ownerId, out var lobby))
             {
                 _logger.LogWarning("Lobby of {OwnerId} not found.", ownerId);
                 return Result.NotFound("Lobby of not found.");
             }
 
-            if (!_actualLobbies.TryRemove(lobbyKey, out var lobby))
+            if (!_actualLobbies.TryRemove(lobby.Key, out var removedLobby))
             {
-                _logger.LogWarning("Lobby of {OwnerId} with {Key} not found.", ownerId, lobbyKey);
+                _logger.LogWarning("Lobby of {OwnerId} with {Key} not found.", ownerId, lobby.Key);
                 return Result.NotFound("Lobby of not found.");
             }
 

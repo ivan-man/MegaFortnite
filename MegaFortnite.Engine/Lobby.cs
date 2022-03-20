@@ -28,18 +28,18 @@ namespace MegaFortnite.Engine
 
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Key { get; init; }
-        public int OwnerId { get; init; }
+        public Guid OwnerId { get; init; }
         public SessionType Type { get; init; }
         public SessionState State { get; set; } = SessionState.Pending;
         public DateTime Created { get; init; }
         public ConcurrentDictionary<PlayerProfileDto, PlayerStats> PlayersStats { get; } = new();
 
-        private readonly Func<int, Result> _selfDestruct;
+        private readonly Func<Guid, Result> _selfDestruct;
 
-        public Lobby(int ownerId, SessionType type, string key, Func<int, Result> selfDestruct)
+        public Lobby(Guid customerId, SessionType type, string key, Func<Guid, Result> selfDestruct)
         {
             _idleTimer = new Timer(GetSelfDestructPeriod(Type));
-            OwnerId = ownerId;
+            OwnerId = customerId;
             Key = key;
             Type = type;
 
@@ -91,7 +91,7 @@ namespace MegaFortnite.Engine
             {
                 _tickRateTimer = new Timer(TickRate);
 
-                _idleTimer.Dispose();
+                _idleTimer.Stop();
 
                 _tickRateTimer.Elapsed += TickRateTimerOnElapsed;
 

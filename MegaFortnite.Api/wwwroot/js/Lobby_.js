@@ -64,7 +64,7 @@ async function createLobby() {
         console.log(err);
         setTimeout(start, 5000);
     }
-};
+}
 
 async function join() {
     try {
@@ -81,7 +81,7 @@ async function join() {
         console.log(err);
         setTimeout(start, 5000);
     }
-};
+}
 
 document.getElementById("join").addEventListener("click", join, false);
 document.getElementById("createButton").addEventListener("click", createLobby, false);
@@ -116,28 +116,8 @@ connection.on("GameStarted", function (initHealth) {
 });
 
 connection.on("LogWarning", LogWarning);
-async function LogWarning(message) {
-    var li = document.createElement("li");
-    li.class = "warningMessage";
-    document.getElementById("Log").appendChild(li);
-    li.textContent = `${message}`;
-}
-
 connection.on("LogError", LogError);
-async function LogError(message) {
-    var li = document.createElement("li");
-    li.class = "errorMessage";
-    document.getElementById("Log").appendChild(li);
-    li.textContent = typeof message === 'string' || message instanceof String ? `${message}` : `${message.message}`;
-}
-
 connection.on("LogMessage", LogMessage);
-async function LogMessage(message) {
-    var li = document.createElement("li");
-    li.class = "normalMessage";
-    document.getElementById("Log").appendChild(li);
-    li.textContent = `${message}`;
-}
 
 connection.start().then(function () {
     document.getElementById("createButton").disabled = false;

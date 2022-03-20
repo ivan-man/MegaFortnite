@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Mapster;
 using MediatR;
@@ -13,9 +14,9 @@ namespace MegaFortnite.Business.Join
 {
     public class JointCommandHandler : IRequestHandler<JointCommand, Result<PlayerStats>>
     {
-        public IMediator _mediator;
-        public ILobbyManager _lobbyManager;
-        private ILogger<JointCommandHandler> _logger;
+        private readonly IMediator _mediator;
+        private readonly ILobbyManager _lobbyManager;
+        private readonly ILogger<JointCommandHandler> _logger;
 
         public JointCommandHandler(IMediator mediator, ILobbyManager lobbyManager, ILogger<JointCommandHandler> logger)
         {
@@ -26,17 +27,24 @@ namespace MegaFortnite.Business.Join
 
         public async Task<Result<PlayerStats>> Handle(JointCommand request, CancellationToken cancellationToken)
         {
-            var profileResponse = await _mediator.Send(new GetProfileCommand { CustomerId = request.CustomerId });
+            try
+            {
+                var profileResponse = await _mediator.Send(new GetProfileCommand { CustomerId = request.CustomerId });
 
-            if (!profileResponse.Success)
-                return Result<PlayerStats>.Failed(profileResponse);
+                if (!profileResponse.Success)
+                    return Result<PlayerStats>.Failed(profileResponse);
 
-            var lobbyResponse = _lobbyManager.GetLobby(request.LobbyKey);
+                var lobbyResponse = _lobbyManager.GetLobby(request.LobbyKey);
 
-            if (!lobbyResponse.Success)
-                return Result<PlayerStats>.Failed(lobbyResponse);
-
-            return  lobbyResponse.Data.Join(profileResponse.Data.Adapt<PlayerProfileDto>());
+                return !lobbyResponse.Success
+                    ? Result<PlayerStats>.Failed(lobbyResponse)
+                    : lobbyResponse.Data.Join(profileResponse.Data.Adapt<PlayerProfileDto>());
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed to join to lobby {@Request}", request);
+                return Result<PlayerStats>.Internal(e.Message);
+            }
         }
     }
 }

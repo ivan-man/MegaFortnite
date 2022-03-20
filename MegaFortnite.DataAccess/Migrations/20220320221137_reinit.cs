@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MegaFortnite.DataAccess.Migrations
 {
-    public partial class init : Migration
+    public partial class reinit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +42,8 @@ namespace MegaFortnite.DataAccess.Migrations
                     LobbyKey = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     State = table.Column<int>(type: "integer", nullable: false),
-                    OwnerId = table.Column<int>(type: "integer", nullable: false),
+                    OwnerId1 = table.Column<int>(type: "integer", nullable: true),
+                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Updated = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
@@ -50,12 +51,12 @@ namespace MegaFortnite.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Sessions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sessions_Profiles_OwnerId",
-                        column: x => x.OwnerId,
+                        name: "FK_Sessions_Profiles_OwnerId1",
+                        column: x => x.OwnerId1,
                         principalSchema: "public",
                         principalTable: "Profiles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,9 +95,9 @@ namespace MegaFortnite.DataAccess.Migrations
                 columns: new[] { "Id", "Created", "CustomerId", "NickName", "Rate", "Updated", "WinRate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 3, 15, 23, 53, 13, 422, DateTimeKind.Utc).AddTicks(8973), new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bff"), "xXx_predator_xXx", 0, null, 0m },
-                    { 2, new DateTime(2022, 3, 15, 23, 53, 13, 422, DateTimeKind.Utc).AddTicks(9179), new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfa"), "HArU6ATOP", 0, null, 0m },
-                    { 3, new DateTime(2022, 3, 15, 23, 53, 13, 422, DateTimeKind.Utc).AddTicks(9182), new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfb"), "4TO_C_E6AJIOM", 0, null, 0m }
+                    { 1, new DateTime(2022, 3, 20, 22, 11, 37, 571, DateTimeKind.Utc).AddTicks(2788), new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bff"), "xXx_predator_xXx", 0, null, 0m },
+                    { 2, new DateTime(2022, 3, 20, 22, 11, 37, 571, DateTimeKind.Utc).AddTicks(3184), new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfa"), "HArU6ATOP", 0, null, 0m },
+                    { 3, new DateTime(2022, 3, 20, 22, 11, 37, 571, DateTimeKind.Utc).AddTicks(3188), new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfb"), "4TO_C_E6AJIOM", 0, null, 0m }
                 });
 
             migrationBuilder.CreateIndex(
@@ -119,10 +120,10 @@ namespace MegaFortnite.DataAccess.Migrations
                 column: "SessionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sessions_OwnerId",
+                name: "IX_Sessions_OwnerId1",
                 schema: "public",
                 table: "Sessions",
-                column: "OwnerId");
+                column: "OwnerId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

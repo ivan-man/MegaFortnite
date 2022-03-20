@@ -58,7 +58,7 @@ namespace MegaFortnite.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2022, 3, 15, 23, 53, 13, 422, DateTimeKind.Utc).AddTicks(8973),
+                            Created = new DateTime(2022, 3, 20, 22, 11, 37, 571, DateTimeKind.Utc).AddTicks(2788),
                             CustomerId = new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bff"),
                             NickName = "xXx_predator_xXx",
                             Rate = 0,
@@ -67,7 +67,7 @@ namespace MegaFortnite.DataAccess.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2022, 3, 15, 23, 53, 13, 422, DateTimeKind.Utc).AddTicks(9179),
+                            Created = new DateTime(2022, 3, 20, 22, 11, 37, 571, DateTimeKind.Utc).AddTicks(3184),
                             CustomerId = new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfa"),
                             NickName = "HArU6ATOP",
                             Rate = 0,
@@ -76,7 +76,7 @@ namespace MegaFortnite.DataAccess.Migrations
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2022, 3, 15, 23, 53, 13, 422, DateTimeKind.Utc).AddTicks(9182),
+                            Created = new DateTime(2022, 3, 20, 22, 11, 37, 571, DateTimeKind.Utc).AddTicks(3188),
                             CustomerId = new Guid("a6b3ee91-1be7-4eab-a15b-7bffc8b94bfb"),
                             NickName = "4TO_C_E6AJIOM",
                             Rate = 0,
@@ -97,7 +97,10 @@ namespace MegaFortnite.DataAccess.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("character varying(5)");
 
-                    b.Property<int>("OwnerId")
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("OwnerId1")
                         .HasColumnType("integer");
 
                     b.Property<int>("State")
@@ -111,7 +114,7 @@ namespace MegaFortnite.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("OwnerId1");
 
                     b.ToTable("Sessions");
                 });
@@ -146,9 +149,7 @@ namespace MegaFortnite.DataAccess.Migrations
                 {
                     b.HasOne("MegaFortnite.Domain.Models.Profile", "Owner")
                         .WithMany("Sessions")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OwnerId1");
 
                     b.Navigation("Owner");
                 });

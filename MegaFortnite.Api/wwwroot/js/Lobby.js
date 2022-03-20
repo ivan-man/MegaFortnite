@@ -18,6 +18,9 @@ let options = {
     accessTokenFactory: () => mgr.getUser().access_token,
 };
 
+let accessToken;
+let connection;
+
 mgr.getUser().then(async function (user) {
     if (user) {
         document.getElementById("userIdInput").value = user.profile.sub;
@@ -30,21 +33,26 @@ mgr.getUser().then(async function (user) {
 });
 
 async function initGame(user) {
-    // let connection = new signalR.HubConnectionBuilder().withUrl("/lobbyHub", options).build();
-    let connection = new signalR.HubConnectionBuilder().withUrl(`/lobbyHub?token=${user.access_token}`).build();
-    // const signalR = new HubConnectionBuilder().withUrl(`/lobbyHub?token=${token}`).build();
+    accessToken = user.access_token;
+
+    connection = new signalR.HubConnectionBuilder().withUrl(`/lobbyHub?token=${accessToken}`).build();
     connection.onclose(async () => {
-        await start();
+        await LogWarning("Connection closing")
+        await start(connection);
+        await LogWarning("Connection closed")
     });
 
     connection.on("LogWarning", LogWarning);
     connection.on("LogMessage", LogMessage);
     connection.on("LogError", LogError);
+    connection.on("LobbyCreated", async function (lobbyInfo) {
+        await LogWarning(lobbyInfo.key);
+    });
 
     // Start the connection.
-    await start();
+    await start(connection);
 
-    async function start() {
+    async function start(connection) {
         try {
             await connection.start().catch(async err => await LogError(err.toString()));
             await LogMessage("SignalR Connected.");
@@ -55,23 +63,32 @@ async function initGame(user) {
     }
 }
 
-async function LogWarning(message) {
-    let li = document.createElement("li");
-    li.class = "warningMessage";
-    document.getElementById("Log").appendChild(li);
-    li.textContent = `${message}`;
+async function createLobby() {
+    try {
+        let userId = document.getElementById("userIdInput").value;
+        await connection.invoke("CreateLobby", userId).catch(function (err) {
+            return console.error(err.toString());
+        });
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-async function LogMessage(message) {
-    let li = document.createElement("li");
-    li.class = "normalMessage";
-    document.getElementById("Log").appendChild(li);
-    li.textContent = `${message}`;
+async function join() {
+    try {
+        let userId = document.getElementById("userIdInput").value;
+        let key = document.getElementById("lobbyKeyInput").value;
+        await connection.invoke("Join", userId, key).catch(async function (err) {
+            return await LogError(err.toString());
+        });
+
+        document.getElementById("createButton").disabled = true;
+        document.getElementById("join").disabled = true;
+        document.getElementById("lobbyKeyInput").disabled = true;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-async function LogError(message) {
-    let li = document.createElement("li");
-    li.class = "errorMessage";
-    document.getElementById("Log").appendChild(li);
-    li.textContent = typeof message === 'string' || message instanceof String ? `${message}` : `${message.message}`;
-}
+document.getElementById("join").addEventListener("click", join, false);
+document.getElementById("createButton").addEventListener("click", createLobby, false);

@@ -11,7 +11,7 @@ namespace MegaFortnite.Domain.Models
         public SessionType Type { get; init; }
         public SessionState State { get; set; }
         public Profile Owner { get; init; }
-        public int OwnerId { get; init; }
+        public Guid OwnerId { get; init; }
         public List<SessionResult> Results { get; init; }
     }
 }

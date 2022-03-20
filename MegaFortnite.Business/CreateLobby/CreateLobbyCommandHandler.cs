@@ -17,11 +17,12 @@ namespace MegaFortnite.Business.CreateLobby
 {
     public class CreateLobbyCommandHandler : IRequestHandler<CreateLobbyCommand, Result<Lobby>>
     {
-        private ILobbyManager _lobbyManager;
-        private IUnitOfWork _unitOfWork;
-        private ILogger<CreateLobbyCommandHandler> _logger;
+        private readonly ILobbyManager _lobbyManager;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<CreateLobbyCommandHandler> _logger;
 
-        public CreateLobbyCommandHandler(ILobbyManager lobbyManager, IUnitOfWork unitOfWork, ILogger<CreateLobbyCommandHandler> logger)
+        public CreateLobbyCommandHandler(ILobbyManager lobbyManager, IUnitOfWork unitOfWork,
+            ILogger<CreateLobbyCommandHandler> logger)
         {
             _lobbyManager = lobbyManager;
             _unitOfWork = unitOfWork;
@@ -32,7 +33,7 @@ namespace MegaFortnite.Business.CreateLobby
         {
             try
             {
-                var lobbyResponse = _lobbyManager.CreateLobby(request.OwnerId, request.SessionType);
+                var lobbyResponse = _lobbyManager.CreateLobby(request.CustomerId, request.SessionType);
                 if (!lobbyResponse.Success)
                 {
                     _logger.LogWarning("Failed to create lobby. {@Request}", request);
@@ -40,9 +41,14 @@ namespace MegaFortnite.Business.CreateLobby
                 }
 
                 var session = lobbyResponse.Data.Adapt<Session>();
-                _unitOfWork.Sessions.Add(session);
+                if (await _unitOfWork.Sessions.CountAsync(q => q.LobbyKey == session.LobbyKey, cancellationToken) < 1)
+                {
+                    _unitOfWork.Sessions.Add(session);
+                    await _unitOfWork.SaveChangesAsync(cancellationToken);
+                }
+                else
+                    return lobbyResponse;
 
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
                 lobbyResponse.Data.Id = session.Id;
 
                 return lobbyResponse;
@@ -50,7 +56,7 @@ namespace MegaFortnite.Business.CreateLobby
             catch (Exception e)
             {
                 _logger.LogError(e, "Failed to create lobby. {@Request}", request);
-                return Result<Lobby>.Internal();
+                return Result<Lobby>.Internal(e.Message);
             }
         }
     }
