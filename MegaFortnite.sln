@@ -17,9 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaFortnite.Contracts", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaFortnite.Api", "MegaFortnite.Api\MegaFortnite.Api.csproj", "{FF504A64-61AD-4D1A-9964-C1D7F4ADA6F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "Infrastructure\IdentityService\IdentityService.csproj", "{763B9AE1-492D-4F0B-BF84-D5583FC901AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService", "Infrastructure\IdentityService\IdentityService.csproj", "{763B9AE1-492D-4F0B-BF84-D5583FC901AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastucture", "Infrastucture", "{F159E8B3-7888-45DB-A5C3-24ACDD16FF17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MegaFortnite.Engine.Service", "MegaFortnite.Engine.Service\MegaFortnite.Engine.Service.csproj", "{3BABF9AF-8969-44D3-9771-E4F416E694C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MegaFortnite.Engine.Service.GrpcClient", "MegaFortnite.Engine.Service.GrpcClient\MegaFortnite.Engine.Service.GrpcClient.csproj", "{BA1FA3AD-3717-4DD5-B313-283479F43C42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,14 +63,22 @@ Global
 		{763B9AE1-492D-4F0B-BF84-D5583FC901AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{763B9AE1-492D-4F0B-BF84-D5583FC901AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{763B9AE1-492D-4F0B-BF84-D5583FC901AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BABF9AF-8969-44D3-9771-E4F416E694C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BABF9AF-8969-44D3-9771-E4F416E694C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BABF9AF-8969-44D3-9771-E4F416E694C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BABF9AF-8969-44D3-9771-E4F416E694C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA1FA3AD-3717-4DD5-B313-283479F43C42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA1FA3AD-3717-4DD5-B313-283479F43C42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA1FA3AD-3717-4DD5-B313-283479F43C42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA1FA3AD-3717-4DD5-B313-283479F43C42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {3A9B3EFA-6D50-435E-BC15-840108E85617}
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{763B9AE1-492D-4F0B-BF84-D5583FC901AC} = {F159E8B3-7888-45DB-A5C3-24ACDD16FF17}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A9B3EFA-6D50-435E-BC15-840108E85617}
 	EndGlobalSection
 EndGlobal
