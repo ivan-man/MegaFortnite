@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Mapster;
 using MediatR;
 using MegaFortnite.Business.CreateLobby;
+using MegaFortnite.Business.GetProfile;
 using MegaFortnite.Business.Join;
 using MegaFortnite.Common.Enums;
 using MegaFortnite.Engine;
@@ -35,7 +37,21 @@ namespace MegaFortnite.Api.Hubs
         {
             var connectionId = Context.ConnectionId;
 
-            var userId = Context.User?.Claims;
+            var userId = Context.User?.Claims
+                .FirstOrDefault(q => q.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"))
+                ?.Value;
+
+            if (!Guid.TryParse(userId, out var customerId))
+            {
+                await Clients.Client(Context.ConnectionId).SendAsync("LogWarning", $"Invalid UserId {userId}");
+                return;
+            }
+
+            var profileResponse = await _mediator.Send(new GetProfileCommand
+            {
+                CustomerId = customerId,
+            }, Context.ConnectionAborted);
+
             //if (!int.TryParse(paramId, out var id))
             //{
             //    _logger.LogWarning("Invalid user id on connection {Id}", paramId);
@@ -48,13 +64,13 @@ namespace MegaFortnite.Api.Hubs
             //    Id = id,
             //}, Context.ConnectionAborted);
 
-            //if (!profileResponse.Success)
-            //{
-            //    await Clients.Others.SendAsync("LogWarning", profileResponse.Message, Context.ConnectionAborted);
-            //    Context.Abort();
-            //}
+            if (!profileResponse.Success)
+            {
+                await Clients.Others.SendAsync("LogWarning", profileResponse.Message, Context.ConnectionAborted);
+                Context.Abort();
+            }
 
-            await Clients.Client(Context.ConnectionId).SendAsync("LogMessage", $"{Context.ConnectionId} connected");
+            await Clients.Client(Context.ConnectionId).SendAsync("LogMessage", $"{profileResponse.Data.NickName} connected");
         }
 
         public async Task CreateLobby(int ownerId)
@@ -108,12 +124,12 @@ namespace MegaFortnite.Api.Hubs
                 string.Join("; ", e.Stats.Select(q => $"{q.NickName}: {q.Health}")));
         }
 
-        public async Task Join(int playerId, string key)
+        public async Task Join(Guid customerId, string key)
         {
             var joinResponse = await _mediator.Send(new JointCommand
             {
                 LobbyKey = key,
-                PlayerId = playerId,
+                CustomerId = customerId,
             }, Context.ConnectionAborted);
 
             if (joinResponse.Success)

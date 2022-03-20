@@ -10,9 +10,9 @@ namespace MegaFortnite.Business.Join
                 .NotEmpty()
                 .WithMessage($" {nameof(JointCommand.LobbyKey)} can't be empty");
 
-            RuleFor(x => x.PlayerId)
-                .GreaterThan(0)
-                .WithMessage($"Invalid {nameof(JointCommand.PlayerId)}");
+            RuleFor(x => x.CustomerId)
+                .NotEmpty()
+                .WithMessage($"Invalid {nameof(JointCommand.CustomerId)}");
         }
     }
 }

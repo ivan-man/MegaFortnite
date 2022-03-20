@@ -11,16 +11,11 @@ let config = {
 
 let mgr = new Oidc.UserManager(config);
 
-// let options = {
-//     accessToken: function () {
-//         return mgr.getUser().access_token;
-//     }
-// };
-
-let options: signalR.IHttpConnectionOptions = {
-    accessTokenFactory: () => {
+let options = {
+    accessToken: function () {
         return mgr.getUser().access_token;
-    }
+    },
+    accessTokenFactory: () => mgr.getUser().access_token,
 };
 
 mgr.getUser().then(async function (user) {
@@ -35,9 +30,9 @@ mgr.getUser().then(async function (user) {
 });
 
 async function initGame(user) {
-
-    this.connection = new signalR.HubConnectionBuilder().withUrl("/lobbyHub", options).build();
-
+    // let connection = new signalR.HubConnectionBuilder().withUrl("/lobbyHub", options).build();
+    let connection = new signalR.HubConnectionBuilder().withUrl(`/lobbyHub?token=${user.access_token}`).build();
+    // const signalR = new HubConnectionBuilder().withUrl(`/lobbyHub?token=${token}`).build();
     connection.onclose(async () => {
         await start();
     });

@@ -6,9 +6,9 @@ namespace MegaFortnite.Business.GetProfile
     {
         public GetProfileCommandValidator()
         {
-            RuleFor(x => x.Id)
-                .GreaterThan(0)
-                .WithMessage($"Invalid user {nameof(GetProfileCommand.Id)}");
+            RuleFor(x => x.CustomerId)
+                .NotEmpty()
+                .WithMessage($"Invalid CustomerId");
         }
     }
 }

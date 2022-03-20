@@ -1,10 +1,12 @@
-﻿namespace MegaFortnite.Contracts.Dto
+﻿using System;
+
+namespace MegaFortnite.Contracts.Dto
 {
     public class PlayerProfileDto
     {
         public int Id { get; init; }
         public string NickName { get; init; }
-        public int CustomerId { get; init; }
+        public Guid CustomerId { get; init; }
         public CustomerDto Customer { get; init; }
         public int WinRate { get; init; }
         public int Rate { get; init; }

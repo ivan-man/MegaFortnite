@@ -9,6 +9,7 @@ namespace MegaFortnite.Engine
     public class PlayerStats
     {
         public int PlayerId { get; }
+        public Guid CustomerId { get; }
         public string NickName { get; }
         public int MaxHealth { get; }
 

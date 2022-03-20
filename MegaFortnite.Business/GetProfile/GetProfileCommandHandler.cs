@@ -27,10 +27,10 @@ namespace MegaFortnite.Business.GetProfile
 
         public async Task<Result<PlayerProfileDto>> Handle(GetProfileCommand request, CancellationToken cancellationToken)
         {
-            var profile = await _unitOfWork.Profiles.GetAsync(q => q.Id == request.Id);
+            var profile = await _unitOfWork.Profiles.GetAsync(q => q.CustomerId == request.CustomerId);
 
             if (profile == null)
-                return Result<PlayerProfileDto>.NotFound($"Profile with Id = '{request.Id}' not found");
+                return Result<PlayerProfileDto>.NotFound($"Profile with Id = '{request.CustomerId}' not found");
 
             return Result<PlayerProfileDto>.Ok(profile.Adapt<PlayerProfileDto>());
         }

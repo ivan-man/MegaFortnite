@@ -11,6 +11,6 @@ namespace MegaFortnite.Business.GetProfile
 {
     public class GetProfileCommand : IRequest<Result<PlayerProfileDto>>
     {
-        public int Id { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }

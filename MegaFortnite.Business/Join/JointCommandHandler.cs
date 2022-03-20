@@ -26,7 +26,7 @@ namespace MegaFortnite.Business.Join
 
         public async Task<Result<PlayerStats>> Handle(JointCommand request, CancellationToken cancellationToken)
         {
-            var profileResponse = await _mediator.Send(new GetProfileCommand { Id = request.PlayerId });
+            var profileResponse = await _mediator.Send(new GetProfileCommand { CustomerId = request.CustomerId });
 
             if (!profileResponse.Success)
                 return Result<PlayerStats>.Failed(profileResponse);

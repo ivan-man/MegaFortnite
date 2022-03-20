@@ -51,31 +51,34 @@ namespace MegaFortnite.Api
             //         options.RequireHttpsMetadata = false;
             //     });
 
-            services.AddAuthentication(x =>
+            services.AddAuthentication(options =>
                 {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer(x =>
+                .AddJwtBearer(options =>
                 {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
+                    options.Authority = "https://localhost:5001";
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
                         // IssuerSigningKey = new SymmetricSecurityKey(key),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
-                    x.Events= new JwtBearerEvents
+                    options.Events= new JwtBearerEvents
                     {
                         OnMessageReceived = context =>
                         {
-                            var accessToken = context.Request.Query["access_token"];
+                            var accessToken = context.Request.Query["token"];
 
                             // If the request is for our hub...
                             var path = context.HttpContext.Request.Path;
-                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/lobbyhub")))
+                            if (!string.IsNullOrEmpty(accessToken)
+                                && (path.StartsWithSegments("/lobbyhub")
+                                    || path.StartsWithSegments("/test")))
                             {
                                 // Read the token out of the query string
                                 context.Token = accessToken;
@@ -112,6 +115,7 @@ namespace MegaFortnite.Api
             app.UseAuthorization();
             app.UseStaticFiles();
 
+            app.Use(async (context, next) => await MiddleWare.AuthMiddleware.AuthQueryStringToHeader(context, next));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<LobbyHub>("/lobbyHub");
