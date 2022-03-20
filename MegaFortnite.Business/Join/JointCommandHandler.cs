@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Mapster;
 using MediatR;
 using MegaFortnite.Business.GetProfile;
-using MegaFortnite.Business.Internal;
+using MegaFortnite.Business.InternalServices;
 using MegaFortnite.Common.Result;
 using MegaFortnite.Contracts.Dto;
 using MegaFortnite.Engine;

@@ -3,7 +3,7 @@ using MegaFortnite.Common.Enums;
 using MegaFortnite.Common.Result;
 using MegaFortnite.Engine;
 
-namespace MegaFortnite.Business.Internal
+namespace MegaFortnite.Business.InternalServices
 {
     public interface ILobbyManager
     {

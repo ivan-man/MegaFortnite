@@ -142,7 +142,6 @@ namespace MegaFortnite.Engine
         {
             RaiseFinishedEvent();
 
-            Dispose();
             _tickRateTimer.Dispose();
             _idleTimer.Start();
         }

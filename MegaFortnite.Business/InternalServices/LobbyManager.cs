@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
-using MegaFortnite.Business.LobbyFinished;
+using MegaFortnite.Business.SendLobbyNotification;
 using MegaFortnite.Common.Enums;
 using MegaFortnite.Common.Helpers;
 using MegaFortnite.Common.Result;
-using MegaFortnite.DataAccess;
-using MegaFortnite.Domain.Models;
 using MegaFortnite.Engine;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace MegaFortnite.Business.Internal
+namespace MegaFortnite.Business.InternalServices
 {
     public class LobbyManager : ILobbyManager
     {
@@ -99,6 +95,11 @@ namespace MegaFortnite.Business.Internal
         //Говнокод
         private async void LobbyOnFinishedEvent(object sender, StatesChangeEventArgs e)
         {
+            await _mediator.Send(new SendLobbyNotificationCommand
+            {
+                Message = "срака",
+                LobbyKey = e.Key,
+            });
             //ToDO не работает
             //if (!e.Loser.HasValue || !e.Winner.HasValue || e.Id == default)
             //{

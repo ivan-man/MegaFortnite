@@ -52,8 +52,6 @@ mgr.getUser().then(function (user) {
     }
 });
 
-
-
 async function createLobby() {
     try {
         var userId = parseInt(document.getElementById("userIdInput").value, 10);

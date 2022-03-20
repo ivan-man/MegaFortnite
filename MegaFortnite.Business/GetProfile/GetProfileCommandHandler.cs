@@ -40,7 +40,7 @@ namespace MegaFortnite.Business.GetProfile
             catch (Exception e)
             {
                 _logger.LogError(e, "Failed to get profile {@Request}", request);
-                return Result<PlayerProfileDto>.Internal();
+                return Result<PlayerProfileDto>.Internal(e.Message);
             }
         }
     }

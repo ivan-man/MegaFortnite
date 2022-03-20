@@ -14,6 +14,7 @@ using IdentityServer4.AccessTokenValidation;
 using MegaFortnite.Api.Hubs;
 using MegaFortnite.Api.Utils.Extensions;
 using MegaFortnite.Business;
+using MegaFortnite.Common.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -89,6 +90,7 @@ namespace MegaFortnite.Api
                 });
 
 
+            services.AddScoped<INotifyService, NotifyService>();
             services.AddSignalR(options => options.EnableDetailedErrors = true);
             services.AddBusinessLayer(Configuration);
             services.AddCors();

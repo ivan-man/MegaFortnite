@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Mapster;
 using MediatR;
-using MegaFortnite.Business.Internal;
+using MegaFortnite.Business.InternalServices;
 using MegaFortnite.Common.Result;
 using MegaFortnite.DataAccess;
 using MegaFortnite.Domain.Models;

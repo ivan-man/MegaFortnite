@@ -2,7 +2,7 @@
 using Mapster;
 using MediatR;
 using MegaFortnite.Business.Behaviors;
-using MegaFortnite.Business.Internal;
+using MegaFortnite.Business.InternalServices;
 using MegaFortnite.DataAccess;
 using MegaFortnite.Engine;
 using Microsoft.Extensions.Configuration;

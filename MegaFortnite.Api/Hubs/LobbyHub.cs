@@ -8,6 +8,7 @@ using MediatR;
 using MegaFortnite.Business.CreateLobby;
 using MegaFortnite.Business.GetProfile;
 using MegaFortnite.Business.Join;
+using MegaFortnite.Business.SendLobbyNotification;
 using MegaFortnite.Business.SetOrUpdateConnection;
 using MegaFortnite.Common.Enums;
 using MegaFortnite.Engine;
@@ -103,9 +104,9 @@ namespace MegaFortnite.Api.Hubs
                 return;
             }
 
-            //lobbyResponse.Data.StartedEvent += DataOnStartedEvent;
-            //lobbyResponse.Data.TickHappened += DataOnTickHappened;
-            //lobbyResponse.Data.FinishedEvent += DataOnFinishedEvent;
+            // lobbyResponse.Data.StartedEvent += DataOnStartedEvent;
+            // lobbyResponse.Data.TickHappened += DataOnTickHappened;
+            // lobbyResponse.Data.FinishedEvent += DataOnFinishedEvent;
 
             await Groups.AddToGroupAsync(Context.ConnectionId, lobbyResponse.Data.Key, Context.ConnectionAborted);
             await Clients.Client(Context.ConnectionId)
@@ -154,12 +155,14 @@ namespace MegaFortnite.Api.Hubs
             else
                 await Clients.Group(key).SendAsync("LogWarning", $"{joinResponse.Message} Code: {joinResponse.Code}",
                     Context.ConnectionAborted);
+
+            // await _mediator.Send(new SendLobbyNotificationCommand { LobbyKey = key, Message = "Testing"}, Context.ConnectionAborted);
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
             if (exception is not null)
-                _logger.LogWarning(exception, "Disconnected with error {ConnectionId} ", Context.ConnectionId);
+                _logger.LogError(exception, "Disconnected with error {ConnectionId} ", Context.ConnectionId);
             else
                 _logger.LogInformation("Client {ConnectionId} disconnected.", Context.ConnectionId);
 
